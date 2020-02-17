@@ -2,7 +2,6 @@ package network
 
 import (
     "context"
-    "encoding/binary"
     "golang.org/x/net/icmp"
     "golang.org/x/net/ipv4"
     "golang.org/x/net/ipv6"
@@ -154,54 +153,6 @@ type ICMPManager struct {
 
 var manager *ICMPManager
 var once sync.Once
-
-// ICMP checksum function from golang.org/x/net internal implementation.
-// Copyright 2012 The Go Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the golang.LICENSE file.
-func checksum(b []byte) uint16 {
-    csumcv := len(b) - 1 // checksum coverage
-    s := uint32(0)
-    for i := 0; i < csumcv; i += 2 {
-        s += uint32(b[i+1])<<8 | uint32(b[i])
-    }
-    if csumcv&1 == 0 {
-        s += uint32(b[csumcv])
-    }
-    s = s>>16 + s&0xffff
-    s = s + s>>16
-    return ^uint16(s)
-}
-
-// The following to function are specially designed for this program's usage
-// and applicability to other cases should be considered carefully.
-
-// verify verifies if an ICMP echo packet has correct checksum: RFC792, RFC1071
-func verify(b []byte) bool {
-    if len(b) < 8 || binary.BigEndian.Uint16(b[2:4]) == 0 {
-        return false
-    } // too short message or no checksum
-    // copy the field to be verified as we need to modify it first
-    bSource := make([]byte, len(b))
-    copy(bSource, b)
-    bSource[2], bSource[3] = 0, 0
-    return checksum(bSource) == binary.BigEndian.Uint16(b[2:4])
-}
-
-// verifyPsh verifies if an ICMPv6 echo packet has correct pseudo header checksum: RFC2460, RFC2463
-func verifyPsh(b []byte) bool {
-    if len(b) < 48 || binary.BigEndian.Uint16(b[42:44]) == 0 {
-        return false
-    } // too short message or no checksum
-    // copy the field to be verified as we need to modify it first
-    psh := make([]byte, 40)
-    copy(psh[:32], b[8:40])      // Src & Dst address
-    copy(psh[34:36], b[4:6])     // Payload Length
-    psh[39] = 58                 // Next header
-    psh = append(psh, b[40:]...) // body
-    psh[42], psh[43] = 0, 0      // zero the checksum field
-    return checksum(psh) == binary.BigEndian.Uint16(b[42:44])
-}
 
 // listen to ICMP socket to receive packet
 func ICMPv4Receiver(wait time.Duration, icmpResponse chan *ICMPResponse,

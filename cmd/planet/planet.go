@@ -28,7 +28,7 @@ var (
     logFile       = flag.String("l", "", "Log file.")
     level         = flag.Int("v", 2, "Verbose level.")
     timeout       = flag.Int("w", 1000, "Report send timeout(ms)")
-    refresh       = flag.Int("f", 3600, "Config update interval")
+    refresh       = flag.Int("f", 3600, "Config update interval(ms)")
     reportLink    string
     configLink    string
     configULink   string
@@ -70,6 +70,11 @@ type ErrResponse struct {
 }
 
 func init() {
+    flag.Usage = func() {
+        _, _ = fmt.Fprintf(flag.CommandLine.Output(), "StarPing Planet node. Usage: \n")
+        flag.PrintDefaults()
+    }
+    
     flag.Parse()
     
     secret = []byte(*_secret)
