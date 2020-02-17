@@ -1,0 +1,8 @@
+/.idea/
+/demo/
+/cmd/api
+__pycache__/
+
+*.exe
+*.log
+*.py*
