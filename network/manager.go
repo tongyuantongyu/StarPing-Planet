@@ -1,3 +1,19 @@
+// StarPing Planet
+// Copyright (C) 2020  Yuan Tong
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 package network
 
 import (
@@ -40,9 +56,10 @@ type Response interface {
 
 // Concurrent map implementation by orcaman(https://github.com/orcaman)
 // Modification to use int as key by penhauer-xiao(https://github.com/penhauer-xiao)
+
 // Copyright (c) 2014 streamrail
 // Use of this source code is governed by MIT license that
-//can be found in the concurrent-map.LICENSE file.
+// can be found in the concurrent-map.LICENSE file.
 
 type ConMapRequest struct {
     Shards  int

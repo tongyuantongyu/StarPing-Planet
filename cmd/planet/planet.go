@@ -1,3 +1,19 @@
+// StarPing Planet
+// Copyright (C) 2020  Yuan Tong
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 package main
 
 import (
@@ -29,6 +45,7 @@ var (
     level         = flag.Int("v", 2, "Verbose level.")
     timeout       = flag.Int("w", 1000, "Report send timeout(ms)")
     refresh       = flag.Int("f", 3600, "Config update interval(ms)")
+    license       = flag.Bool("license", false, "Show license.")
     reportLink    string
     configLink    string
     configULink   string
@@ -71,11 +88,32 @@ type ErrResponse struct {
 
 func init() {
     flag.Usage = func() {
-        _, _ = fmt.Fprintf(flag.CommandLine.Output(), "StarPing Planet node. Usage: \n")
+        _, _ = fmt.Fprintln(flag.CommandLine.Output(), "StarPing Planet node. Copyright (C) 2020  Yuan Tong\nUsage: ")
         flag.PrintDefaults()
+        _, _ = fmt.Fprintln(flag.CommandLine.Output(),
+            "\nThis program comes with ABSOLUTELY NO WARRANTY;\n"+
+                "This is free software, and you are welcome to redistribute it\n"+
+                "under certain conditions. Use -license flag for details.")
     }
     
     flag.Parse()
+    
+    if *license {
+        _, _ = fmt.Fprintln(flag.CommandLine.Output(),
+            "StarPing Planet\n" +
+            "Copyright (C) 2020  Yuan Tong\n\n" +
+            "This program is free software: you can redistribute it and/or modify\n" +
+            "it under the terms of the GNU General Public License as published by\n" +
+            "the Free Software Foundation, either version 3 of the License, or\n" +
+            "(at your option) any later version.\n\n" +
+            "This program is distributed in the hope that it will be useful,\n" +
+            "but WITHOUT ANY WARRANTY; without even the implied warranty of\n" +
+            "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n" +
+            "GNU General Public License for more details.\n\n" +
+            "You should have received a copy of the GNU General Public License\n" +
+            "along with this program.  If not, see <https://www.gnu.org/licenses/>.")
+        os.Exit(0)
+    }
     
     secret = []byte(*_secret)
     
